@@ -120,11 +120,11 @@
       }
     }
 
-    /* شاشة الترحيب الفخمة */
+    /* شاشة تسجيل الدخول والترحيب */
     #welcomeOverlay {
       position: absolute;
       inset: 0;
-      background: rgba(10, 10, 18, 0.88);
+      background: rgba(10, 10, 18, 0.92);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
       display: flex;
@@ -138,14 +138,14 @@
     }
 
     .avatar-icon {
-      width: 100px;
-      height: 100px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
       box-shadow: 0 0 40px rgba(255, 45, 85, 0.5);
       border: 2px solid rgba(255, 255, 255, 0.3);
       animation: pulseGlow 2s infinite alternate;
@@ -157,37 +157,87 @@
     }
 
     #welcomeOverlay h1 {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 800;
       color: #fff;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     #welcomeOverlay p {
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       color: var(--text-muted);
-      margin-bottom: 40px;
+      margin-bottom: 24px;
+    }
+
+    /* نموذج تسجيل الدخول */
+    .login-form {
+      width: 100%;
+      max-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-group i {
+      position: absolute;
+      right: 14px;
+      color: var(--text-muted);
+      width: 18px;
+      height: 18px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 14px 44px 14px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .login-input:focus {
+      border-color: var(--primary-pink);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 15px rgba(255, 45, 85, 0.2);
+    }
+
+    .login-error {
+      color: #ef4444;
+      font-size: 0.85rem;
+      display: none;
+      margin-top: -4px;
     }
 
     .enter-btn {
       background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
       color: #fff;
       border: none;
-      padding: 16px 48px;
-      font-size: 1.1rem;
+      padding: 14px;
+      font-size: 1.05rem;
       font-weight: 700;
-      border-radius: 30px;
+      border-radius: 16px;
       cursor: pointer;
-      box-shadow: 0 10px 25px rgba(255, 45, 85, 0.4);
+      box-shadow: 0 8px 20px rgba(255, 45, 85, 0.4);
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
+      margin-top: 6px;
     }
 
     .enter-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 15px 30px rgba(255, 45, 85, 0.6);
+      box-shadow: 0 12px 25px rgba(255, 45, 85, 0.6);
     }
 
     /* شريط العنوان العلوي */
@@ -249,7 +299,7 @@
       color: #fff;
     }
 
-    /* بطاقات التواريخ مرتبة */
+    /* بطاقات التواريخ */
     .date-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -525,7 +575,7 @@
       transition: all 0.3s ease;
     }
 
-    /* لعبة اصتياد القلوب الجديدة الجصيرة */
+    /* لعبة اصتياد القلوب */
     .game-container {
       display: flex;
       flex-direction: column;
@@ -661,22 +711,35 @@
 
   <div class="app-frame">
     
-    <!-- صوت الخلفية المخفي -->
+    <!-- صوت الخلفية -->
     <audio id="bgAudio" loop preload="auto">
       <source src="https://upset-beige-rvischew.edgeone.dev/" type="audio/mpeg">
     </audio>
 
-    <!-- شاشة الترحيب الفخمة -->
+    <!-- شاشة تسجيل الدخول والترحيب -->
     <div id="welcomeOverlay">
       <div class="avatar-icon">
-        <i data-lucide="heart" style="width: 48px; height: 48px; color: #fff; fill: #fff;"></i>
+        <i data-lucide="heart" style="width: 44px; height: 44px; color: #fff; fill: #fff;"></i>
       </div>
       <h1>أهلاً بكِ يا أماني</h1>
-      <p>عالم خاص مكرّس لعينيكِ الجميلتين ✨</p>
-      <button class="enter-btn" onclick="closeWelcome()">
-        <span>دخول العالم</span>
-        <i data-lucide="sparkles" style="width: 20px; height: 20px;"></i>
-      </button>
+      <p>يرجى تسجيل الدخول لدخول عالم الحب ✨</p>
+      
+      <!-- نموذج تسجيل الدخول -->
+      <div class="login-form">
+        <div class="input-group">
+          <i data-lucide="user"></i>
+          <input type="text" id="usernameInput" class="login-input" placeholder="اسم المستخدم">
+        </div>
+        <div class="input-group">
+          <i data-lucide="lock"></i>
+          <input type="password" id="passwordInput" class="login-input" placeholder="كلمة المرور">
+        </div>
+        <div class="login-error" id="loginError">اسم المستخدم أو كلمة المرور غير صحيحة!</div>
+        <button class="enter-btn" onclick="checkLogin()">
+          <span>دخول العالم</span>
+          <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i>
+        </button>
+      </div>
     </div>
 
     <!-- شريط التطبيق العلوي -->
@@ -721,7 +784,7 @@
         </div>
       </div>
 
-      <!-- 2. قسم المنشورات والصور (جديد مع الحفظ المحلي) -->
+      <!-- 2. قسم المنشورات والصور -->
       <div class="tab-page" id="tab-posts">
         <div class="section-title">
           <i data-lucide="image" style="color: var(--primary-pink);"></i>
@@ -773,7 +836,7 @@
         </div>
       </div>
 
-      <!-- 4. قسم لعبة صيد القلوب الجميلة (جديد) -->
+      <!-- 4. قسم لعبة صيد القلوب -->
       <div class="tab-page" id="tab-game">
         <div class="section-title">
           <i data-lucide="gamepad-2" style="color: #38bdf8;"></i>
@@ -813,7 +876,7 @@
           </div>
           <div class="info-item">
             <h5><i data-lucide="cpu" style="width:16px;"></i> إصدار التطبيق</h5>
-            <p>النسخة العصرية المبرمجة Glassmorphism v4.0</p>
+            <p>النسخة العصرية Glassmorphism v4.5</p>
           </div>
           <div class="dedication">
             💌 إهداء خاص ومحمل بالحب إلى حبيبتي وأميرتي "أماني" ❤️
@@ -854,7 +917,24 @@
 
     const audio = document.getElementById('bgAudio');
 
-    // الدخول وتغيير الشاشة وتشغيل الصوت
+    // التحقق من اسم المستخدم وكلمة المرور
+    function checkLogin() {
+      const username = document.getElementById('usernameInput').value.trim().toLowerCase();
+      const password = document.getElementById('passwordInput').value.trim();
+      const errorMsg = document.getElementById('loginError');
+
+      // الأسماء المقبولة: أماني، اماني، أدهم، ادهم
+      const allowedUsers = ['اماني', 'أماني', 'ادهم', 'أدهم'];
+
+      if (allowedUsers.includes(username) && password === '1234') {
+        errorMsg.style.display = 'none';
+        closeWelcome();
+      } else {
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    // إغلاق شاشة الترحيب وتفعيل الصوت
     function closeWelcome() {
       const overlay = document.getElementById('welcomeOverlay');
       overlay.style.opacity = '0';
@@ -885,7 +965,7 @@
       document.getElementById('poemBox').innerText = poems[index];
     }
 
-    // --- نظام المنشورات والصور والحفظ المحالي (LocalStorage) ---
+    // --- نظام المنشورات والصور والحفظ المحالي ---
     let currentImageBase64 = '';
 
     function handleImageSelect(event) {
@@ -977,7 +1057,6 @@
       lucide.createIcons();
     }
 
-    // تحميل المنشورات المحفوظة عند التشغيل
     loadPosts();
 
     // --- اختبار مقياس الحب ---
@@ -988,7 +1067,7 @@
       res.innerText = 'نسبة الحب: 100% (عشق خالد لا ينتهي) ❤️';
     }
 
-    // --- لعبة اصطياد القلوب التفاعلية الممتعة ---
+    // --- لعبة اصطياد القلوب ---
     let score = 0;
     let gameTimer = 30;
     let gameInterval = null;
@@ -1003,10 +1082,8 @@
       document.getElementById('gameTimer').innerText = gameTimer;
       document.getElementById('gameOverlay').style.display = 'none';
 
-      // إزالة القلوب القديمة إن وجدت
       document.querySelectorAll('.falling-item').forEach(el => el.remove());
 
-      // مؤقت الوقت
       gameInterval = setInterval(() => {
         gameTimer--;
         document.getElementById('gameTimer').innerText = gameTimer;
@@ -1015,7 +1092,6 @@
         }
       }, 1000);
 
-      // توليد العناصر الهابطة
       spawnInterval = setInterval(spawnHeart, 600);
     }
 
@@ -1030,14 +1106,12 @@
       const randomIcon = itemsList[Math.floor(Math.random() * itemsList.length)];
       item.innerText = randomIcon;
 
-      // موقع عشوائي أفقي وسرعة سقوط عشوائية
       const randomX = Math.random() * (canvas.clientWidth - 40);
-      const randomDuration = 2 + Math.random() * 2; // بين 2 و 4 ثواني
+      const randomDuration = 2 + Math.random() * 2;
 
       item.style.left = `${randomX}px`;
       item.style.animationDuration = `${randomDuration}s`;
 
-      // التقاط القلب عند الضغط
       item.addEventListener('pointerdown', () => {
         score += 10;
         document.getElementById('gameScore').innerText = score;
@@ -1046,7 +1120,6 @@
 
       canvas.appendChild(item);
 
-      // حذف العنصر بعد سقوطه
       setTimeout(() => {
         if (item.parentNode) item.remove();
       }, randomDuration * 1000);
