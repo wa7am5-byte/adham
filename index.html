@@ -13,6 +13,10 @@
   <!-- أيقونات Lucide الحديثة -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- مكتبات Firebase للبث المباشر الموحد للجميع -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
   <style>
     :root {
       --primary-pink: #ff2d55;
@@ -63,38 +67,16 @@
       animation: float 10s infinite alternate ease-in-out;
     }
 
-    .blob-1 {
-      width: 300px;
-      height: 300px;
-      background: rgba(255, 45, 85, 0.4);
-      top: -50px;
-      right: -50px;
-    }
-
-    .blob-2 {
-      width: 350px;
-      height: 350px;
-      background: rgba(142, 45, 226, 0.35);
-      bottom: -100px;
-      left: -100px;
-      animation-delay: -5s;
-    }
-
-    .blob-3 {
-      width: 200px;
-      height: 200px;
-      background: rgba(251, 191, 36, 0.25);
-      top: 40%;
-      left: 30%;
-      animation-duration: 8s;
-    }
+    .blob-1 { width: 300px; height: 300px; background: rgba(255, 45, 85, 0.4); top: -50px; right: -50px; }
+    .blob-2 { width: 350px; height: 350px; background: rgba(142, 45, 226, 0.35); bottom: -100px; left: -100px; animation-delay: -5s; }
+    .blob-3 { width: 200px; height: 200px; background: rgba(251, 191, 36, 0.25); top: 40%; left: 30%; animation-duration: 8s; }
 
     @keyframes float {
       0% { transform: translate(0, 0) scale(1); }
       100% { transform: translate(30px, 50px) scale(1.1); }
     }
 
-    /* إطار التطبيق الزجاجي */
+    /* إطار التطبيق */
     .app-frame {
       width: 100%;
       max-width: 430px;
@@ -120,11 +102,11 @@
       }
     }
 
-    /* شاشة تسجيل الدخول والترحيب */
+    /* شاشة تسجيل الدخول */
     #welcomeOverlay {
       position: absolute;
       inset: 0;
-      background: rgba(10, 10, 18, 0.92);
+      background: rgba(10, 10, 18, 0.95);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
       display: flex;
@@ -134,7 +116,7 @@
       z-index: 999;
       text-align: center;
       padding: 30px;
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+      transition: opacity 0.5s ease, visibility 0.5s;
     }
 
     .avatar-icon {
@@ -148,49 +130,14 @@
       margin-bottom: 16px;
       box-shadow: 0 0 40px rgba(255, 45, 85, 0.5);
       border: 2px solid rgba(255, 255, 255, 0.3);
-      animation: pulseGlow 2s infinite alternate;
     }
 
-    @keyframes pulseGlow {
-      0% { transform: scale(1); box-shadow: 0 0 30px rgba(255, 45, 85, 0.4); }
-      100% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255, 45, 85, 0.7); }
-    }
+    #welcomeOverlay h1 { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    #welcomeOverlay p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 24px; }
 
-    #welcomeOverlay h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-
-    #welcomeOverlay p {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-    }
-
-    /* نموذج تسجيل الدخول */
-    .login-form {
-      width: 100%;
-      max-width: 300px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .input-group {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .input-group i {
-      position: absolute;
-      right: 14px;
-      color: var(--text-muted);
-      width: 18px;
-      height: 18px;
-    }
+    .login-form { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 12px; }
+    .input-group { position: relative; display: flex; align-items: center; }
+    .input-group i { position: absolute; right: 14px; color: var(--text-muted); width: 18px; height: 18px; }
 
     .login-input {
       width: 100%;
@@ -201,21 +148,10 @@
       color: #fff;
       font-size: 0.95rem;
       outline: none;
-      transition: all 0.3s ease;
     }
 
-    .login-input:focus {
-      border-color: var(--primary-pink);
-      background: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 0 15px rgba(255, 45, 85, 0.2);
-    }
-
-    .login-error {
-      color: #ef4444;
-      font-size: 0.85rem;
-      display: none;
-      margin-top: -4px;
-    }
+    .login-input:focus { border-color: var(--primary-pink); background: rgba(255, 255, 255, 0.12); }
+    .login-error { color: #ef4444; font-size: 0.85rem; display: none; }
 
     .enter-btn {
       background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
@@ -226,27 +162,19 @@
       font-weight: 700;
       border-radius: 16px;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(255, 45, 85, 0.4);
-      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 6px;
     }
 
-    .enter-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 25px rgba(255, 45, 85, 0.6);
-    }
-
-    /* شريط العنوان العلوي */
+    /* الشريط العلوي */
     .app-header {
       padding: 20px 24px;
       background: rgba(255, 255, 255, 0.03);
       border-bottom: 1px solid var(--glass-border);
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       z-index: 10;
     }
@@ -262,50 +190,29 @@
       gap: 8px;
     }
 
-    /* محتوى الأقسام */
-    .app-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px 20px;
-      position: relative;
-    }
-
-    .app-content::-webkit-scrollbar {
-      width: 0px;
-    }
-
-    .tab-page {
-      display: none;
-      flex-direction: column;
-      gap: 20px;
-      animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .tab-page.active {
+    .logout-icon {
+      color: var(--text-muted);
+      cursor: pointer;
       display: flex;
+      align-items: center;
     }
+
+    /* محتوى التطبيق */
+    .app-content { flex: 1; overflow-y: auto; padding: 24px 20px; }
+    .app-content::-webkit-scrollbar { width: 0px; }
+
+    .tab-page { display: none; flex-direction: column; gap: 20px; animation: slideUp 0.4s ease; }
+    .tab-page.active { display: flex; }
 
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(15px); }
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .section-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #fff;
-    }
+    .section-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #fff; }
 
-    /* بطاقات التواريخ */
-    .date-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
+    /* التواريخ والقصائد */
+    .date-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
     .date-card {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
@@ -313,32 +220,10 @@
       padding: 16px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .date-card:hover {
-      background: var(--glass-bg-hover);
-      transform: translateY(-3px);
-    }
-
-    .date-card h4 {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-
-    .date-card p {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .date-card.active {
-      background: linear-gradient(135deg, rgba(255, 45, 85, 0.25), rgba(142, 45, 226, 0.25));
-      border-color: var(--primary-pink);
-      box-shadow: 0 8px 20px rgba(255, 45, 85, 0.2);
-    }
+    .date-card h4 { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    .date-card p { font-size: 0.95rem; font-weight: 700; color: #fff; }
+    .date-card.active { background: linear-gradient(135deg, rgba(255, 45, 85, 0.25), rgba(142, 45, 226, 0.25)); border-color: var(--primary-pink); }
 
     .poem-box {
       background: var(--glass-bg);
@@ -348,16 +233,11 @@
       text-align: center;
       line-height: 2;
       font-size: 1.05rem;
-      font-weight: 500;
-      min-height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       white-space: pre-line;
       color: #f1f5f9;
     }
 
-    /* قسم إبداع المنشورات والصور */
+    /* المنشورات */
     .post-creator-box {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
@@ -369,340 +249,63 @@
     }
 
     .post-textarea {
-      width: 100%;
-      height: 80px;
+      width: 100%; height: 80px;
       background: rgba(0, 0, 0, 0.25);
       border: 1px solid var(--glass-border);
-      border-radius: 14px;
-      padding: 12px;
-      color: #fff;
-      font-size: 0.95rem;
-      resize: none;
-      outline: none;
+      border-radius: 14px; padding: 12px;
+      color: #fff; font-size: 0.95rem;
+      resize: none; outline: none;
     }
 
-    .post-textarea::placeholder {
-      color: var(--text-muted);
-    }
-
-    .post-controls {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
+    .post-controls { display: flex; gap: 10px; align-items: center; }
 
     .file-input-label {
       background: rgba(255, 255, 255, 0.1);
       border: 1px dashed var(--glass-border);
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-
-    .file-input-label:hover {
-      background: rgba(255, 255, 255, 0.18);
+      color: #fff; padding: 10px 16px;
+      border-radius: 12px; font-size: 0.85rem; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
     }
 
     .publish-btn {
-      flex: 1;
-      padding: 10px;
-      border-radius: 12px;
+      flex: 1; padding: 10px; border-radius: 12px;
       background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
-      color: #fff;
-      border: none;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      color: #fff; border: none; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
     }
 
     .image-preview-container {
-      position: relative;
-      display: none;
-      width: 100%;
-      max-height: 180px;
-      border-radius: 12px;
-      overflow: hidden;
+      position: relative; display: none; width: 100%; max-height: 180px; border-radius: 12px; overflow: hidden;
     }
+    .image-preview-container img { width: 100%; height: 100%; object-fit: cover; }
+    .remove-img-btn { position: absolute; top: 8px; left: 8px; background: rgba(0, 0, 0, 0.6); color: #fff; border: none; border-radius: 50%; width: 26px; height: 26px; cursor: pointer; }
 
-    .image-preview-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .posts-feed { display: flex; flex-direction: column; gap: 16px; }
+    .feed-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .feed-card-header { display: flex; justify-content: space-between; align-items: center; }
+    .feed-user-info { display: flex; align-items: center; gap: 10px; }
+    .feed-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-pink), var(--accent-gold)); display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .feed-card-date { font-size: 0.75rem; color: var(--text-muted); }
+    .feed-card-text { font-size: 0.95rem; line-height: 1.6; color: #e2e8f0; white-space: pre-line; }
+    .feed-card-img { width: 100%; border-radius: 14px; max-height: 250px; object-fit: cover; }
+    .delete-post-btn { background: transparent; border: none; color: #ef4444; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 4px; }
 
-    .remove-img-btn {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(0, 0, 0, 0.6);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 26px;
-      height: 26px;
-      cursor: pointer;
-    }
-
-    /* قائمة المنشورات المحفوظة */
-    .posts-feed {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .feed-card {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .feed-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .feed-user-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .feed-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary-pink), var(--accent-gold));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    .feed-card-date {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .feed-card-text {
-      font-size: 0.95rem;
-      line-height: 1.6;
-      color: #e2e8f0;
-      white-space: pre-line;
-    }
-
-    .feed-card-img {
-      width: 100%;
-      border-radius: 14px;
-      max-height: 250px;
-      object-fit: cover;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .feed-card-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 8px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .delete-post-btn {
-      background: transparent;
-      border: none;
-      color: #ef4444;
-      cursor: pointer;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* مقياس الحب والمعلومات */
-    .love-box, .game-box, .info-card {
-      background: var(--glass-bg);
-      border-radius: 24px;
-      padding: 24px;
-      border: 1px solid var(--glass-border);
-    }
-
-    .love-box { text-align: center; }
-
-    .meter-bar {
-      width: 100%;
-      height: 16px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      overflow: hidden;
-      margin: 20px 0;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 2px;
-    }
-
-    .meter-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--primary-pink), var(--primary-purple), var(--accent-gold));
-      border-radius: 20px;
-      transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .main-btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(255, 45, 85, 0.3);
-      transition: all 0.3s ease;
-    }
-
-    /* لعبة اصتياد القلوب */
-    .game-container {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .game-stats {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 10px 16px;
-      border-radius: 16px;
-      border: 1px solid var(--glass-border);
-    }
-
-    .game-canvas-new {
-      height: 280px;
-      background: linear-gradient(180deg, rgba(15, 15, 30, 0.6), rgba(30, 15, 40, 0.6));
-      border-radius: 20px;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--glass-border);
-      touch-action: none;
-    }
-
-    .falling-item {
-      position: absolute;
-      font-size: 1.8rem;
-      cursor: pointer;
-      user-select: none;
-      animation: fallDown linear forwards;
-      filter: drop-shadow(0 0 8px rgba(255, 45, 85, 0.6));
-    }
-
-    @keyframes fallDown {
-      0% { top: -40px; transform: scale(0.9) rotate(0deg); }
-      100% { top: 300px; transform: scale(1.1) rotate(20deg); }
-    }
-
-    .game-overlay-msg {
-      position: absolute;
-      inset: 0;
-      background: rgba(10, 10, 20, 0.85);
-      backdrop-filter: blur(8px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      text-align: center;
-      gap: 12px;
-      z-index: 5;
-    }
-
-    .info-card {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .info-item h5 {
-      color: var(--accent-gold);
-      font-size: 0.9rem;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .info-item p {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-    }
-
-    .dedication {
-      background: linear-gradient(135deg, rgba(255, 45, 85, 0.15), rgba(142, 45, 226, 0.15));
-      border: 1px solid rgba(255, 45, 85, 0.3);
-      border-radius: 16px;
-      padding: 16px;
-      text-align: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    /* القائمة السفلية */
+    /* أسفل الصفحة (القائمة) */
     .bottom-nav {
       height: 75px;
       background: rgba(15, 15, 25, 0.65);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-top: 1px solid var(--glass-border);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding-bottom: 10px;
+      display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px;
     }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-      font-size: 0.68rem;
-      font-weight: 500;
-      cursor: pointer;
-      width: 20%;
-      transition: all 0.3s ease;
-    }
-
-    .nav-item i {
-      width: 20px;
-      height: 20px;
-    }
-
-    .nav-item.active {
-      color: var(--primary-pink);
-      font-weight: 700;
-    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-muted); font-size: 0.68rem; cursor: pointer; width: 20%; }
+    .nav-item i { width: 20px; height: 20px; }
+    .nav-item.active { color: var(--primary-pink); font-weight: 700; }
   </style>
 </head>
 <body>
 
-  <!-- خلفية ضوئية متحركة -->
   <div class="bg-blobs">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -711,49 +314,50 @@
 
   <div class="app-frame">
     
-    <!-- صوت الخلفية -->
     <audio id="bgAudio" loop preload="auto">
       <source src="https://upset-beige-rvischew.edgeone.dev/" type="audio/mpeg">
     </audio>
 
-    <!-- شاشة تسجيل الدخول والترحيب -->
+    <!-- شاشة تسجيل الدخول -->
     <div id="welcomeOverlay">
       <div class="avatar-icon">
         <i data-lucide="heart" style="width: 44px; height: 44px; color: #fff; fill: #fff;"></i>
       </div>
-      <h1>أهلاً بكِ يا أماني</h1>
-      <p>يرجى تسجيل الدخول لدخول عالم الحب ✨</p>
+      <h1>أهلاً بكما</h1>
+      <p>تسجيل الدخول لمرة واحدة للدخول إلى العالم الخاص ✨</p>
       
-      <!-- نموذج تسجيل الدخول -->
       <div class="login-form">
         <div class="input-group">
           <i data-lucide="user"></i>
-          <input type="text" id="usernameInput" class="login-input" placeholder="اسم المستخدم">
+          <input type="text" id="usernameInput" class="login-input" placeholder="اسم المستخدم (أدهم / أماني)">
         </div>
         <div class="input-group">
           <i data-lucide="lock"></i>
           <input type="password" id="passwordInput" class="login-input" placeholder="كلمة المرور">
         </div>
-        <div class="login-error" id="loginError">اسم المستخدم أو كلمة المرور غير صحيحة!</div>
+        <div class="login-error" id="loginError">البيانات غير صحيحة!</div>
         <button class="enter-btn" onclick="checkLogin()">
-          <span>دخول العالم</span>
+          <span>دخول وتذكر الحساب</span>
           <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i>
         </button>
       </div>
     </div>
 
-    <!-- شريط التطبيق العلوي -->
+    <!-- شريط التطبيق -->
     <div class="app-header">
       <div class="app-title">
         <i data-lucide="heart" style="width: 20px; height: 20px; color: var(--primary-pink); fill: var(--primary-pink);"></i>
         أدهم & أماني
       </div>
+      <div class="logout-icon" title="تسجيل الخروج" onclick="logout()">
+        <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+      </div>
     </div>
 
-    <!-- محتوى التطبيق الأساسي -->
+    <!-- محتوى التطبيق -->
     <div class="app-content">
       
-      <!-- 1. قسم المناسبات والتواريخ -->
+      <!-- المناسبات -->
       <div class="tab-page active" id="tab-dates">
         <div class="section-title">
           <i data-lucide="calendar" style="color: var(--accent-gold);"></i>
@@ -779,21 +383,18 @@
           </div>
         </div>
 
-        <div class="poem-box" id="poemBox">
-          اضغطي على إحدى المناسبات لعرض النبض الشعري الخاص بها.
-        </div>
+        <div class="poem-box" id="poemBox">اضغطي على إحدى المناسبات لعرض النبض الشعري الخاص بها.</div>
       </div>
 
-      <!-- 2. قسم المنشورات والصور -->
+      <!-- المنشورات المشتركة للجميع -->
       <div class="tab-page" id="tab-posts">
         <div class="section-title">
           <i data-lucide="image" style="color: var(--primary-pink);"></i>
-          <span>دفتر الذكريات والمنشورات</span>
+          <span>دفتر الذكريات المشترك</span>
         </div>
 
-        <!-- صندوق إنشاء منشور جديد -->
         <div class="post-creator-box">
-          <textarea id="postInput" class="post-textarea" placeholder="اكتبي أو اكتب ذكرى جميلة هنا يا أماني..."></textarea>
+          <textarea id="postInput" class="post-textarea" placeholder="اكتب ذكراك هنا لتظهر فوراً عند الطرف الآخر..."></textarea>
           
           <div class="image-preview-container" id="imagePreviewContainer">
             <button class="remove-img-btn" onclick="clearSelectedImage()">✕</button>
@@ -803,90 +404,23 @@
           <div class="post-controls">
             <label class="file-input-label">
               <i data-lucide="camera" style="width: 18px; height: 18px;"></i>
-              <span>إضافة صورة</span>
+              <span>صورة</span>
               <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
             </label>
 
             <button class="publish-btn" onclick="addPost()">
               <i data-lucide="send" style="width: 18px; height: 18px;"></i>
-              <span>نشر الذكرى</span>
+              <span>نشر للجميع</span>
             </button>
           </div>
         </div>
 
-        <!-- تغذية المنشورات المحفوظة -->
-        <div class="posts-feed" id="postsFeed">
-          <!-- تضاف المنشورات هنا تلقائياً -->
-        </div>
-      </div>
-
-      <!-- 3. قسم اختبار مقياس الحب -->
-      <div class="tab-page" id="tab-meter">
-        <div class="section-title">
-          <i data-lucide="activity" style="color: var(--primary-pink);"></i>
-          <span>مقياس الحب</span>
-        </div>
-        <div class="love-box">
-          <p style="font-size: 0.9rem; color: var(--text-muted);">اختبار نسبة نبض الحب الحقيقي</p>
-          <div class="meter-bar">
-            <div class="meter-fill" id="meterFill"></div>
-          </div>
-          <button class="main-btn" onclick="startLoveTest()">بدء القياس</button>
-          <div id="loveResult" style="margin-top: 16px; font-weight: 700; color: #fff;"></div>
-        </div>
-      </div>
-
-      <!-- 4. قسم لعبة صيد القلوب -->
-      <div class="tab-page" id="tab-game">
-        <div class="section-title">
-          <i data-lucide="gamepad-2" style="color: #38bdf8;"></i>
-          <span>لعبة اصطياد القلوب لأماني</span>
-        </div>
-
-        <div class="game-container">
-          <div class="game-stats">
-            <span style="font-size: 0.9rem; color: var(--accent-gold); font-weight: 700;">
-              النقاط: <span id="gameScore">0</span>
-            </span>
-            <span style="font-size: 0.9rem; color: #fff; font-weight: 700;">
-              الوقت: <span id="gameTimer">30</span> ث
-            </span>
-          </div>
-
-          <div class="game-canvas-new" id="gameCanvas">
-            <div class="game-overlay-msg" id="gameOverlay">
-              <h3 style="color: var(--primary-pink);">لعبة القلوب لأماني 💖</h3>
-              <p style="font-size: 0.85rem; color: var(--text-muted);">التقطي أكبر عدد من القلوب الهابطة من السماء قبل انتهاء الوقت!</p>
-              <button class="main-btn" onclick="startGame()" style="width: auto; padding: 10px 24px;">بدء اللعبة</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. قسم حول التطبيق والإهداء -->
-      <div class="tab-page" id="tab-info">
-        <div class="section-title">
-          <i data-lucide="info" style="color: var(--accent-gold);"></i>
-          <span>حول التطبيق</span>
-        </div>
-        <div class="info-card">
-          <div class="info-item">
-            <h5><i data-lucide="code" style="width:16px;"></i> تطوير وبرمجة</h5>
-            <p>تم تصميم وتطوير التطبيق بواسطة <strong>أدهم الهبة</strong></p>
-          </div>
-          <div class="info-item">
-            <h5><i data-lucide="cpu" style="width:16px;"></i> إصدار التطبيق</h5>
-            <p>النسخة العصرية Glassmorphism v4.5</p>
-          </div>
-          <div class="dedication">
-            💌 إهداء خاص ومحمل بالحب إلى حبيبتي وأميرتي "أماني" ❤️
-          </div>
-        </div>
+        <div class="posts-feed" id="postsFeed"></div>
       </div>
 
     </div>
 
-    <!-- القائمة السفليّة للتنقل -->
+    <!-- القائمة السفلية -->
     <div class="bottom-nav">
       <div class="nav-item active" onclick="switchTab('tab-dates', this)">
         <i data-lucide="calendar"></i>
@@ -896,62 +430,79 @@
         <i data-lucide="image"></i>
         <span>المنشورات</span>
       </div>
-      <div class="nav-item" onclick="switchTab('tab-meter', this)">
-        <i data-lucide="heart-pulse"></i>
-        <span>المقياس</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('tab-game', this)">
-        <i data-lucide="gamepad-2"></i>
-        <span>اللعبة</span>
-      </div>
-      <div class="nav-item" onclick="switchTab('tab-info', this)">
-        <i data-lucide="sparkles"></i>
-        <span>عن التطبيق</span>
-      </div>
     </div>
 
   </div>
 
   <script>
     lucide.createIcons();
-
     const audio = document.getElementById('bgAudio');
 
-    // التحقق من اسم المستخدم وكلمة المرور
+    // 🔴 إعداد قاعدة بيانات سحابية مجانية (Firebase) لتبادل المنشورات للجميع
+    // يمكنك استبدال القيم أدناه بمفاتيح مشروعك من Firebase Console لتعمل فوراً بين كل الهواتف:
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "YOUR_APP_ID"
+    };
+
+    let db = null;
+    let currentUser = localStorage.getItem('loggedUser') || '';
+
+    // التحقق من حالة تسجيل الدخول تلقائياً (تسجيل لمرة واحدة)
+    window.addEventListener('DOMContentLoaded', () => {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      if (isLoggedIn === 'true') {
+        hideLoginScreen();
+      }
+      initDatabase();
+    });
+
     function checkLogin() {
-      const username = document.getElementById('usernameInput').value.trim().toLowerCase();
+      const username = document.getElementById('usernameInput').value.trim();
       const password = document.getElementById('passwordInput').value.trim();
       const errorMsg = document.getElementById('loginError');
 
-      // الأسماء المقبولة: أماني، اماني، أدهم، ادهم
       const allowedUsers = ['اماني', 'أماني', 'ادهم', 'أدهم'];
 
-      if (allowedUsers.includes(username) && password === '1234') {
+      if (allowedUsers.includes(username.toLowerCase()) && password === '1234') {
         errorMsg.style.display = 'none';
-        closeWelcome();
+        
+        // 🔑 حفظ التسجيل دائمياً بـ LocalStorage
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('loggedUser', username);
+        currentUser = username;
+
+        hideLoginScreen();
       } else {
         errorMsg.style.display = 'block';
       }
     }
 
-    // إغلاق شاشة الترحيب وتفعيل الصوت
-    function closeWelcome() {
+    function hideLoginScreen() {
       const overlay = document.getElementById('welcomeOverlay');
       overlay.style.opacity = '0';
       overlay.style.visibility = 'hidden';
       audio.play().catch(e => console.log("Audio Error:", e));
     }
 
-    // التنقل بين الصفحات
+    function logout() {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('loggedUser');
+      location.reload();
+    }
+
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-page').forEach(page => page.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-      
       document.getElementById(tabId).classList.add('active');
       el.classList.add('active');
     }
 
-    // قصائد التواريخ
     const poems = [
       "ومَا كُنْتُ مِمَّنْ يَدْخُلُ العِشْقُ قَلْبَهُ\nوَلَكِنَّ مَنْ يُبْصِرْ جُفُونَكِ يَعْشَقِ 💖", 
       "بِالفَاتِحَة ابْتَدَأَتْ حِكَايَةُ عِشْقِنَا\nوَبِهَا الدُّعَاءُ إِلَى الإِلَهِ أَنْ نَلْتَقِي ✨", 
@@ -965,7 +516,7 @@
       document.getElementById('poemBox').innerText = poems[index];
     }
 
-    // --- نظام المنشورات والصور والحفظ المحالي ---
+    // --- إدارة المنشورات الموحدة ---
     let currentImageBase64 = '';
 
     function handleImageSelect(event) {
@@ -987,49 +538,78 @@
       document.getElementById('imagePreviewContainer').style.display = 'none';
     }
 
+    // تهيئة وقراءة المنشورات السحابية / المحلية
+    function initDatabase() {
+      try {
+        if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+          firebase.initializeApp(firebaseConfig);
+          db = firebase.database();
+          
+          // الاستماع للتغييرات الفورية للجميع (Realtime)
+          db.ref('posts').on('value', (snapshot) => {
+            const data = snapshot.val();
+            const postsArr = data ? Object.values(data).reverse() : [];
+            renderPosts(postsArr);
+          });
+        } else {
+          // الحفظ المحلي التلقائي في حال عدم ربط Firebase بعد
+          loadLocalPosts();
+        }
+      } catch (e) {
+        loadLocalPosts();
+      }
+    }
+
     function addPost() {
       const text = document.getElementById('postInput').value.trim();
       
       if (!text && !currentImageBase64) {
-        alert("يرجى كتابة نص أو إرفاق صورة قبل النشر ❤️");
+        alert("يرجى إضافة نص أو صورة 💖");
         return;
       }
 
       const post = {
         id: Date.now(),
+        author: currentUser || "أدهم / أماني",
         text: text,
         image: currentImageBase64,
-        date: new Date().toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+        date: new Date().toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })
       };
 
-      savePostToStorage(post);
+      if (db) {
+        db.ref('posts/' + post.id).set(post);
+      } else {
+        let posts = JSON.parse(localStorage.getItem('adham_amani_posts') || '[]');
+        posts.unshift(post);
+        localStorage.setItem('adham_amani_posts', JSON.stringify(posts));
+        loadLocalPosts();
+      }
+
       document.getElementById('postInput').value = '';
       clearSelectedImage();
-      loadPosts();
-    }
-
-    function savePostToStorage(post) {
-      let posts = JSON.parse(localStorage.getItem('adham_amani_posts') || '[]');
-      posts.unshift(post);
-      localStorage.setItem('adham_amani_posts', JSON.stringify(posts));
     }
 
     function deletePost(id) {
-      let posts = JSON.parse(localStorage.getItem('adham_amani_posts') || '[]');
-      posts = posts.filter(p => p.id !== id);
-      localStorage.setItem('adham_amani_posts', JSON.stringify(posts));
-      loadPosts();
+      if (db) {
+        db.ref('posts/' + id).remove();
+      } else {
+        let posts = JSON.parse(localStorage.getItem('adham_amani_posts') || '[]');
+        posts = posts.filter(p => p.id !== id);
+        localStorage.setItem('adham_amani_posts', JSON.stringify(posts));
+        loadLocalPosts();
+      }
     }
 
-    function loadPosts() {
-      const feed = document.getElementById('postsFeed');
+    function loadLocalPosts() {
       const posts = JSON.parse(localStorage.getItem('adham_amani_posts') || '[]');
+      renderPosts(posts);
+    }
+
+    function renderPosts(posts) {
+      const feed = document.getElementById('postsFeed');
 
       if (posts.length === 0) {
-        feed.innerHTML = `
-          <div style="text-align: center; color: var(--text-muted); padding: 30px; font-size: 0.9rem;">
-            لا توجد منشورات حتى الآن، كوني الأولى في إضافة ذكرى جميلة ✨
-          </div>`;
+        feed.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 30px;">لا توجد منشورات حتى الآن ✨</div>`;
         return;
       }
 
@@ -1037,9 +617,9 @@
         <div class="feed-card">
           <div class="feed-card-header">
             <div class="feed-user-info">
-              <div class="feed-avatar">أ</div>
+              <div class="feed-avatar">${p.author ? p.author.charAt(0) : 'أ'}</div>
               <div>
-                <div style="font-size: 0.9rem; font-weight: 700;">أدهم & أماني</div>
+                <div style="font-size: 0.9rem; font-weight: 700;">${p.author || 'أدهم & أماني'}</div>
                 <div class="feed-card-date">${p.date}</div>
               </div>
             </div>
@@ -1055,90 +635,6 @@
       `).join('');
 
       lucide.createIcons();
-    }
-
-    loadPosts();
-
-    // --- اختبار مقياس الحب ---
-    function startLoveTest() {
-      const fill = document.getElementById('meterFill');
-      const res = document.getElementById('loveResult');
-      fill.style.width = '100%';
-      res.innerText = 'نسبة الحب: 100% (عشق خالد لا ينتهي) ❤️';
-    }
-
-    // --- لعبة اصطياد القلوب ---
-    let score = 0;
-    let gameTimer = 30;
-    let gameInterval = null;
-    let spawnInterval = null;
-    let isPlaying = false;
-
-    function startGame() {
-      score = 0;
-      gameTimer = 30;
-      isPlaying = true;
-      document.getElementById('gameScore').innerText = score;
-      document.getElementById('gameTimer').innerText = gameTimer;
-      document.getElementById('gameOverlay').style.display = 'none';
-
-      document.querySelectorAll('.falling-item').forEach(el => el.remove());
-
-      gameInterval = setInterval(() => {
-        gameTimer--;
-        document.getElementById('gameTimer').innerText = gameTimer;
-        if (gameTimer <= 0) {
-          endGame();
-        }
-      }, 1000);
-
-      spawnInterval = setInterval(spawnHeart, 600);
-    }
-
-    function spawnHeart() {
-      if (!isPlaying) return;
-
-      const canvas = document.getElementById('gameCanvas');
-      const item = document.createElement('div');
-      item.className = 'falling-item';
-
-      const itemsList = ['💖', '❤️', '🌹', '✨', '👑', '💍'];
-      const randomIcon = itemsList[Math.floor(Math.random() * itemsList.length)];
-      item.innerText = randomIcon;
-
-      const randomX = Math.random() * (canvas.clientWidth - 40);
-      const randomDuration = 2 + Math.random() * 2;
-
-      item.style.left = `${randomX}px`;
-      item.style.animationDuration = `${randomDuration}s`;
-
-      item.addEventListener('pointerdown', () => {
-        score += 10;
-        document.getElementById('gameScore').innerText = score;
-        item.remove();
-      });
-
-      canvas.appendChild(item);
-
-      setTimeout(() => {
-        if (item.parentNode) item.remove();
-      }, randomDuration * 1000);
-    }
-
-    function endGame() {
-      isPlaying = false;
-      clearInterval(gameInterval);
-      clearInterval(spawnInterval);
-      document.querySelectorAll('.falling-item').forEach(el => el.remove());
-
-      const overlay = document.getElementById('gameOverlay');
-      overlay.style.display = 'flex';
-      overlay.innerHTML = `
-        <h3 style="color: var(--accent-gold);">انتهت اللعبة الجصيرة! 🎉</h3>
-        <p style="font-size: 1.1rem; color: #fff;">جمعتِ <strong style="color: var(--primary-pink);">${score}</strong> نبضة حب يا أميرتي أماني! ❤️</p>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">أنتِ دائماً الفائزة في قلب أدهم ✨</p>
-        <button class="main-btn" onclick="startGame()" style="width: auto; padding: 10px 24px;">اللعب مجدداً</button>
-      `;
     }
   </script>
 </body>
